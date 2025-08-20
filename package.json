@@ -1,6 +1,7 @@
 {
   "name": "nova-backend",
   "version": "1.0.0",
+  "description": "Backend server for NOVA project with MongoDB, Razorpay",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -11,5 +12,8 @@
     "dotenv": "^17.0.1",
     "express": "^4.21.2",
     "mongoose": "^8.16.1"
-  }
+  },
+  "author": "Krishna",
+  "license": "ISC"
 }
+

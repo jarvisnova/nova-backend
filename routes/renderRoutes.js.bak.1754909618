@@ -1,0 +1,60 @@
+const fs = require("fs");
+const path = require("path");
+const ffmpeg = require("fluent-ffmpeg");
+
+// Start a render request
+const handleRender = async (req, res) => {
+  try {
+    const { audioUrl, imageUrls, style, username } = req.body;
+
+    if (!audioUrl || !imageUrls || imageUrls.length === 0) {
+      return res.status(400).json({ success: false, message: "Missing inputs" });
+    }
+
+    // Generate a unique filename
+    const timestamp = Date.now();
+    const videoName = `${username || "render"}-${timestamp}.mp4`;
+    const outputPath = path.join(__dirname, "..", "renders", videoName);
+
+    // Here you can trigger a render job or queue system if needed
+    // For now, just simulate success
+    console.log("Render request received:", { audioUrl, imageCount: imageUrls.length, style });
+
+    return res.status(200).json({
+      success: true,
+      message: "Render request accepted",
+      videoName,
+      downloadLink: `/downloads/${videoName}`,
+    });
+  } catch (error) {
+    console.error("Render error:", error);
+    res.status(500).json({ success: false, message: "Internal render error" });
+  }
+};
+
+// Save the completed render file to local storage
+const handleRenderComplete = async (req, res) => {
+  try {
+    const { videoBuffer, filename } = req.body;
+
+    if (!videoBuffer || !filename) {
+      return res.status(400).json({ success: false, message: "Missing video data" });
+    }
+
+    const filePath = path.join(__dirname, "..", "renders", filename);
+    fs.writeFileSync(filePath, Buffer.from(videoBuffer, "base64"));
+
+    return res.status(200).json({
+      success: true,
+      message: "Render saved successfully",
+      downloadUrl: `/downloads/${filename}`,
+    });
+  } catch (error) {
+    console.error("Error saving render:", error);
+    res.status(500).json({ success: false, message: "Failed to save render" });
+  }
+};
+
+module.exports = {
+  handleRender,
+

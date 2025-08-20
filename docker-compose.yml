@@ -1,0 +1,18 @@
+version: '3'
+services:
+  backend:
+    build: .
+    container_name: jarvishai-backend
+    ports:
+      - "5000:5000"
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=${MONGO_URI}
+      - RAZORPAY_KEY=${RAZORPAY_KEY}
+      - RAZORPAY_SECRET=${RAZORPAY_SECRET}
+      - RUNPOD_API=${RUNPOD_API}
+    volumes:
+      - .:/app
+      - /app/node_modules
+
